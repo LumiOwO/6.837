@@ -21,6 +21,13 @@ public:
     material = h.material; 
     normal = h.normal; 
     intersectionPoint = h.intersectionPoint; }
+  Hit& operator=(const Hit &h) {
+	  t = h.t;
+	  material = h.material;
+	  normal = h.normal;
+	  intersectionPoint = h.intersectionPoint;
+	  return *this;
+  }
   ~Hit() {}
 
   // ACCESSORS

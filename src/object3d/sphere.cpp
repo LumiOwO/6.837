@@ -7,6 +7,8 @@
 #include "matrix.h"
 #include <GL/glut.h>
 
+#include "global.h"
+
 Sphere::Sphere(Vec3f center, float radius, Material* material):
 	Object3D(material), radius(radius)
 {
@@ -115,16 +117,30 @@ void Sphere::paint() const
 
 void Sphere::insertIntoGrid(Grid *grid) const
 {
-	for(int i = 0; i < grid->getNx(); i++)
-	for(int j = 0; j < grid->getNy(); j++)
-	for(int k = 0; k < grid->getNz(); k++)
-	{
-		Vec3f mid = grid->toPosition({i, j, k});
-		Vec3f vertex = mid + grid->getDelta() / 2;
+	if (!global.visualize_grid) {
+		Object3D::insertIntoGrid(grid);
+		return;
+	}
+	int minVoxel[3];
+	int maxVoxel[3];
+	int n[3] = { grid->nx, grid->ny, grid->nz };
+	for (int i = 0; i < 3; i++) {
+		minVoxel[i] = grid->toIndex(worldBound().getMin(), i);
+		maxVoxel[i] = grid->toIndex(worldBound().getMax(), i);
+		if (minVoxel[i] < 0) minVoxel[i] = 0;
+		if (minVoxel[i] >= n[i]) minVoxel[i] = n[i] - 1;
+		if (maxVoxel[i] < 0) maxVoxel[i] = 0;
+		if (maxVoxel[i] >= n[i]) maxVoxel[i] = n[i] - 1;
+	}
+	for (int i = minVoxel[0]; i <= maxVoxel[0]; i++)
+	for (int j = minVoxel[1]; j <= maxVoxel[1]; j++)
+	for (int k = minVoxel[2]; k <= maxVoxel[2]; k++) {
+		Vec3f mid = grid->getBoundAt(i, j, k).center();
+		Vec3f vertex = mid + grid->delta / 2;
 		mid = WorldtoObj(mid);
 		vertex = WorldtoObj(vertex);
 
-		if(mid.Length() <= radius + (mid - vertex).Length()) {
+		if (mid.Length() <= radius + (mid - vertex).Length()) {
 			grid->addObjectTo(this, i, j, k);
 		}
 	}

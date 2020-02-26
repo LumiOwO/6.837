@@ -13,6 +13,12 @@ using namespace std;
 #include <math.h>
 #include <assert.h>
 
+#define min2(a,b) (((a)<(b))?(a):(b))
+#define max2(a,b) (((a)>(b))?(a):(b))
+
+const float MachineEpsilon = std::numeric_limits<float>::epsilon() * 0.5f;
+#define gamma(n) ((n) * MachineEpsilon) / (1 - (n) * MachineEpsilon)
+
 class Matrix;
 
 // ====================================================================
@@ -188,6 +194,11 @@ public:
     data[0] /= d0;
     data[1] /= d1;
     data[2] /= d2; }
+  void Divide(int d0, int d1, int d2) {
+	  data[0] /= (float)d0;
+	  data[1] /= (float)d1;
+	  data[2] /= (float)d2;
+  }
   //void Normalize() {
   //  float l = Length();
   //  if (l > 0) {

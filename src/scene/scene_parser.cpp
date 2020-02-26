@@ -601,34 +601,34 @@ void SceneParser::parseMatrixHelper(char token[MAX_PARSER_TOKEN_LENGTH], Matrix 
 		if (!strcmp(token, "Scale")) {
 			Vec3f s = readVec3f();
 			Vec3f s_inv = Vec3f(1.0f / s.x(), 1.0f / s.y(), 1.0f / s.z());
-			matrix = Matrix::MakeScale(s) * matrix;
-			inv = inv * Matrix::MakeScale(s_inv);
+			matrix = matrix * Matrix::MakeScale(s);
+			inv = Matrix::MakeScale(s_inv) * inv;
 		} else if (!strcmp(token, "UniformScale")) {
 			float s = readFloat();
-			matrix = Matrix::MakeScale(s) * matrix;
-			inv = inv * Matrix::MakeScale(1.0f / s);
+			matrix = matrix * Matrix::MakeScale(s);
+			inv = Matrix::MakeScale(1.0f / s) * inv;
 		} else if (!strcmp(token, "Translate")) {
 			Vec3f v = readVec3f();
-			matrix = Matrix::MakeTranslation(v) * matrix;
-			inv = inv * Matrix::MakeTranslation(-v);
+			matrix = matrix * Matrix::MakeTranslation(v);
+			inv = Matrix::MakeTranslation(-v) * inv;
 		} else if (!strcmp(token, "XRotate")) {
 			float rad = DegreesToRadians(readFloat());
-			matrix = Matrix::MakeXRotation(rad) * matrix;
-			inv = inv * Matrix::MakeXRotation(-rad);
+			matrix = matrix * Matrix::MakeXRotation(rad);
+			inv = Matrix::MakeXRotation(-rad) * inv;
 		} else if (!strcmp(token, "YRotate")) {
 			float rad = DegreesToRadians(readFloat());
-			matrix = Matrix::MakeYRotation(rad) * matrix;
-			inv = inv * Matrix::MakeYRotation(-rad);
+			matrix = matrix * Matrix::MakeYRotation(rad);
+			inv = Matrix::MakeYRotation(-rad) * inv;
 		} else if (!strcmp(token, "ZRotate")) {
 			float rad = DegreesToRadians(readFloat());
-			matrix = Matrix::MakeZRotation(rad) * matrix;
-			inv = inv * Matrix::MakeZRotation(-rad);
+			matrix = matrix * Matrix::MakeZRotation(rad);
+			inv = Matrix::MakeZRotation(-rad) * inv;
 		} else if (!strcmp(token, "Rotate")) {
 			getToken(token); assert(!strcmp(token, "{"));
 			Vec3f axis = readVec3f();
 			float rad = DegreesToRadians(readFloat());
-			matrix = Matrix::MakeAxisRotation(axis, rad) * matrix;
-			inv = inv * Matrix::MakeAxisRotation(axis, -rad);
+			matrix = matrix * Matrix::MakeAxisRotation(axis, rad);
+			inv = Matrix::MakeAxisRotation(axis, -rad) * inv;
 			getToken(token); assert(!strcmp(token, "}"));
 		} else if (!strcmp(token, "Matrix")) {
 			Matrix matrix2; matrix2.SetToIdentity();
@@ -640,8 +640,8 @@ void SceneParser::parseMatrixHelper(char token[MAX_PARSER_TOKEN_LENGTH], Matrix 
 				}
 			}
 			getToken(token); assert(!strcmp(token, "}"));
-			matrix = matrix2 * matrix;
-			inv = inv * matrix2.Inverse();
+			matrix = matrix * matrix2;
+			inv = matrix2.Inverse() * inv;
 		} else {
 			// otherwise this must be the thing to transform
 			break;

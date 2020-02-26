@@ -173,7 +173,7 @@ Matrix operator-(const Matrix& m1, const Matrix& m2) {
 }
 
 Matrix operator*(const Matrix& m1, const Matrix& m2) {
-  Matrix answer;
+  Matrix answer = Matrix::Zeros();
   for (int y=0; y<4; y++) {
     for (int x=0; x<4; x++) {
       for (int i=0; i<4; i++) {
@@ -287,12 +287,11 @@ Matrix Matrix::MakeAxisRotation(const Vec3f &v, float theta) {
 }
 
 Matrix Matrix::MakePermute(int x, int y, int z) {
-	Matrix r;
-	r.Clear();
+	Matrix r = Matrix::Zeros();
 	r.data[3][3] = 1;
 	int permute[3] = { x, y, z };
 	for (int i = 0; i < 3; i++) {
-		r.data[permute[i]][i] = 1;
+		r.data[i][permute[i]] = 1;
 	}
 	return r;
 }

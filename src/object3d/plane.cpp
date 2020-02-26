@@ -10,8 +10,8 @@ Plane::Plane(Vec3f normal, float offset, Material* material):
 {
 	normal = normal.Normalize();
 	// translate to origin
-	if (offset > 1e-5f) {
-		Vec3f t = normal * offset;
+	if (std::abs(offset) > 1e-8f) {
+		Vec3f t = normal * (-offset);
 		WorldtoObj = Matrix::MakeTranslation(t) * WorldtoObj;
 		ObjtoWorld = ObjtoWorld * Matrix::MakeTranslation(-t);
 	}
@@ -58,7 +58,6 @@ Bound Plane::worldBound() const
 bool Plane::intersect(const Ray &r, Hit &h, float tmin) const
 {
 	RayTracingStats::IncrementNumIntersections();
-	bool ret = false;
 
 	Ray ray = WorldtoObj(r);
 	if (ray.getDirection().Abs().z() < 1e-8f)
@@ -94,5 +93,5 @@ void Plane::paint() const
 
 void Plane::insertIntoGrid(Grid *grid) const
 {
-	grid->addObject(this);
+	grid->addExtra(this);
 }

@@ -5,10 +5,8 @@
 
 #include <assert.h>
 
-#define min2(a,b) (((a)<(b))?(a):(b))
-#define max2(a,b) (((a)>(b))?(a):(b))
-
 class Ray;
+class Hit;
 
 // ====================================================================
 // ====================================================================
@@ -31,6 +29,13 @@ public:
     _max = max; }
   Vec3f getMin() const { return min; }
   Vec3f getMax() const { return max; }
+  Vec3f diagonal() const { return max - min; }
+  Vec3f diagonal(int nx, int ny, int nz) const { 
+	  Vec3f d = diagonal();
+	  d.Divide(nx, ny, nz);
+	  return d; 
+  }
+  Vec3f center() const { return (max + min) / 2; }
   bool isValid() const { return valid; }
   static Bound invalid() { return Bound(false); }
 
@@ -60,7 +65,7 @@ public:
 
   // utilities
   bool cover(Vec3f point) const;
-  bool intersect(const Ray& ray, Vec3f& normal, float& hitT) const;
+  bool intersect(const Ray &r, Hit &h, float tmin) const;
   bool intersect(const Bound& box) const;
   Bound& operator=(const Bound& m);
   friend ostream& operator <<(ostream& out, const Bound& box) {

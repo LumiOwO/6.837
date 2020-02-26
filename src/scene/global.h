@@ -37,4 +37,6 @@ struct Global
 	void parse(int argc, char* argv[]);
 };
 
+extern Global global;
+
 #endif // MAINPARSER_H

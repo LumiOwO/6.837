@@ -19,8 +19,6 @@ public:
 	virtual Bound worldBound() const override;
 	virtual bool intersect(const Ray &r, Hit &h, float tmin) const override;
 	virtual void paint() const override;
-
-	virtual void insertIntoGrid(Grid *grid) const override;
 };
 
 #endif // TRIANGLE_H

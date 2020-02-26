@@ -5,6 +5,7 @@
 #include "raytracing_stats.h"
 
 #include "matrix.h"
+#include "hit.h"
 
 // ====================================================================
 // ====================================================================
@@ -81,46 +82,45 @@ bool Bound::intersect(const Bound &box) const
 			max.z() >= box.min.z();
 }
 
-bool Bound::intersect(const Ray &ray, Vec3f &normal, float &hitT) const
+bool Bound::intersect(const Ray &r, Hit &h, float tmin) const
 {
 	RayTracingStats::IncrementNumIntersections();
-	bool ret = true;
 
-	Vec3f direction = ray.getDirection();
-	Vec3f origin = ray.getOrigin();
-
+	Vec3f d = r.getDirection();
+	Vec3f o = r.getOrigin();
+	Vec3f normal;
 	float hit_min = 0;
 	float hit_max = 1e6;
-	for(int i=0; i<3; i++)
-	{
-		if(fabsf(direction[i]) < 1e-5)
-			continue;
-		float sign = direction[i] > 0? 1.0f: -1.0f;
 
-		float hit_near = (min[i] - origin[i]) / direction[i];
-		float hit_far  = (max[i] - origin[i]) / direction[i];
-		if(hit_near > hit_far)
-		{
-			float temp = hit_near;
-			hit_near = hit_far;
-			hit_far = temp;
+	for(int i = 0; i < 3; i ++) {
+		float inv_dir = 1 / d[i];
+
+		float hit_near = (min[i] - o[i]) * inv_dir;
+		float hit_far  = (max[i] - o[i]) * inv_dir;
+		if (hit_near > hit_far) {
+			std::swap(hit_near, hit_far);
 		}
+		// make it more robust (reference: pbr-book 3.9.2)
+		hit_far *= 1 + 2 * gamma(3);
 
 		// update hit point
-		if(hit_near > hit_min)
-		{
+		if(hit_near > hit_min) {
 			hit_min = hit_near;
 			normal = Vec3f(0, 0, 0);
-			normal[i] = -sign;
+			normal[i] = d[i] > 0 ? -1.0f : 1.0f;
 		}
 		hit_max = hit_far < hit_max? hit_far: hit_max;
+
 		if (hit_min > hit_max) {
-			ret = false;
-			break;
+			return false;
 		}
 	}
 
-	hitT = hit_min;
-	return ret;
+	float hitT = hit_min;
+	if (hit_max < tmin) {
+		return false;
+	}
+	h.set(hitT, nullptr, normal, r);
+	return true;
 }
 

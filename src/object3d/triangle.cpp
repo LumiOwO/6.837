@@ -94,34 +94,3 @@ void Triangle::paint() const
 	glEnd();
 	glPopMatrix();
 }
-
-void Triangle::insertIntoGrid(Grid *grid) const
-{
-	Bound curBox = worldBound();
-//	cout << "grid:" << *grid->getBoundingBox() << endl;
-//	cout << *curBox << endl;
-//	cout << curBox->intersect(*grid->getBoundingBox()) << endl;
-
-	Vec3f min = curBox.getMin();
-	Vec3f max = curBox.getMax();
-	std::vector<int> minVoxel = grid->toGridIndex(min);
-	std::vector<int> maxVoxel = grid->toGridIndex(max);
-
-	std::vector<int> num({grid->getNx(), grid->getNy(), grid->getNz()});
-	for(unsigned int i=0; i<3; i++) {
-		if(minVoxel[i] < 0) minVoxel[i] = 0;
-		if(minVoxel[i] >= num[i]) minVoxel[i] = num[i] - 1;
-		if(maxVoxel[i] < 0) maxVoxel[i] = 0;
-		if(maxVoxel[i] >= num[i]) maxVoxel[i] = num[i] - 1;
-	}
-
-	for(int i = minVoxel[0]; i <= maxVoxel[0]; i++)
-	for(int j = minVoxel[1]; j <= maxVoxel[1]; j++)
-	for(int k = minVoxel[2]; k <= maxVoxel[2]; k++)
-	{
-		Bound box = grid->getBoundAt(i, j, k);
-		if(box.intersect(curBox)) {
-			grid->addObjectTo(this, i, j, k);
-		}
-	}
-}

@@ -16,17 +16,10 @@
 #define BLUE	Vec3f(0, 0, 1)
 #define MAGENTA	Vec3f(1, 0, 1)
 
-Grid::Grid(Bound *bb, int nx, int ny, int nz):
-	bound(bb), nx(nx), ny(ny), nz(nz)
+Grid::Grid(Bound *bb, int nx, int ny, int nz) :
+	bound(bb), nx(nx), ny(ny), nz(nz),
+	delta(bound->diagonal(nx, ny, nz))
 {
-	Vec3f max = bound->getMax();
-	Vec3f min = bound->getMin();
-	delta = Vec3f(
-		(max.x() - min.x()) / nx,
-		(max.y() - min.y()) / ny,
-		(max.z() - min.z()) / nz
-	);
-
 	voxels = new Voxel** [nx];
 	for(int i=0; i<nx; i++) {
 		voxels[i] = new Voxel* [ny];
@@ -37,8 +30,11 @@ Grid::Grid(Bound *bb, int nx, int ny, int nz):
 			}
 		}
 	}
-
-	initGridMaterials();
+	// init grid materials
+	for (int i = 0; i < SIZE; i++) {
+		int idx = i > 6 ? 6 : i;
+		materials[i] = getMaterial(idx);
+	}
 }
 
 Grid::~Grid()
@@ -55,118 +51,103 @@ Grid::~Grid()
 		delete materials[i];
 }
 
-void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float) const
+void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const
 {
-	Vec3f origin = r.getOrigin();
-	Vec3f direction = r.getDirection();
+	Hit h;
+	mi.hasHit = bound->intersect(r, h, tmin);
+	if (!mi.hasHit)
+		return;
 
-	float hitT = 0;
-	Vec3f normal;
-	if(bound->cover(origin) || bound->intersect(r, normal, hitT))
-	{
-		Vec3f hitPoint = r.pointAtParameter(hitT);
-		vector<int> index = toGridIndex(hitPoint);
-		Vec3f pos = toPosition(index);
+	Vec3f o = r.getOrigin();
+	Vec3f d = r.getDirection();
+	Vec3f min = bound->getMin();
 
-		for(int i=0; i<3; i++)
-		{
-			mi.setIndexAt(i, index[(unsigned int)i]);
-			if(fabsf(direction[i]) < 1e-5) {
-				mi.setSignAt(i, 0);
-				mi.setDeltaAt(i, 1e7);
-				mi.setNextAt(i, 1e7);
-			} else {
-				float sign = direction[i] > 0? 1.0f: -1.0f;
-				float curDelta = delta[i] / fabsf(direction[i]);
-				mi.setSignAt(i, sign);
-				mi.setDeltaAt(i, curDelta);
-
-				float diff = (pos[i] - hitPoint[i]) / direction[i];
-				float next = hitT + diff + curDelta;
-				mi.setNextAt(i, next);
-			}
+	mi.t = h.getT();
+	mi.normal = h.getNormal();
+	for (int i = 0; i < 3; i++) {
+		// init deltaT
+		mi.deltaT[i] = delta[i] / std::abs(d[i]);
+		// init index
+		mi.index[i] = toIndex(h.getIntersectionPoint(), i);
+		// init sign
+		mi.sign[i] = d[i] > 0 ? 1 : -1;
+		// init nextT
+		if (d[i] == 0) {
+			mi.nextT[i] = FLT_MAX;
+		} else if (d[i] < 0) {
+			mi.nextT[i] = (mi.index[i] * delta[i] - (o[i] - min[i]) ) / d[i];
+		} else {
+			mi.nextT[i] = ((mi.index[i] + 1) * delta[i] - (o[i] - min[i]) ) / d[i];
 		}
-		mi.setNowT(hitT);
-		mi.setNormal(normal);
-		mi.setHasHit(true);
 	}
+	if (!inGrid(mi.index))
+		mi.nextCell();
 }
 
 bool Grid::intersect(const Ray &r, Hit &h, float tmin) const
 {
 	RayTracingStats::IncrementNumIntersections();
+
 	MarchingInfo info;
 	initializeRayMarch(info, r, tmin);
+	bool ret = false;
 
 	int step = 0;
-	bool ret = false;
-	int i = info.getIndexAt(0);
-	int j = info.getIndexAt(1);
-	int k = info.getIndexAt(2);
-	while(info.hasHit()
-		  && i >= 0 && i <= nx
-		  && j >= 0 && j <= ny
-		  && k >= 0 && k <= nz)
-	{
-//		cout << "(" << i << ", " << j << ", " << k << ")" << endl;
-		if(i == nx || j == ny || k == nz)
-			;
-		else {
-			Bound box = getBoundAt(i, j, k);
-			Vec3f min = box.getMin();
-			Vec3f max = box.getMax();
+	while(info.hasHit && inGrid(info.index)) {
+		Bound box = getBoundAt(info.index);
+		Vec3f min = box.getMin();
+		Vec3f max = box.getMax();
 
-			Vec3f vertices[8] = {
-				Vec3f( min.x(), min.y(), min.z() ),
-				Vec3f( max.x(), min.y(), min.z() ),
-				Vec3f( max.x(), max.y(), min.z() ),
-				Vec3f( min.x(), max.y(), min.z() ),
+		Vec3f vertices[8] = {
+			Vec3f( min.x(), min.y(), min.z() ),
+			Vec3f( max.x(), min.y(), min.z() ),
+			Vec3f( max.x(), max.y(), min.z() ),
+			Vec3f( min.x(), max.y(), min.z() ),
 
-				Vec3f( min.x(), min.y(), max.z() ),
-				Vec3f( max.x(), min.y(), max.z() ),
-				Vec3f( max.x(), max.y(), max.z() ),
-				Vec3f( min.x(), max.y(), max.z() ),
-			};
-			Vec3f faces[6][4] = {
-				{ vertices[0], vertices[3], vertices[2], vertices[1] },
-				{ vertices[0], vertices[1], vertices[5], vertices[4] },
-				{ vertices[1], vertices[2], vertices[6], vertices[5] },
-				{ vertices[2], vertices[3], vertices[7], vertices[6] },
-				{ vertices[0], vertices[4], vertices[7], vertices[3] },
-				{ vertices[4], vertices[5], vertices[6], vertices[7] },
-			};
-			Vec3f normals[6] = {
-				Vec3f(  0,  0, -1 ),
-				Vec3f(  0, -1,  0 ),
-				Vec3f(  1,  0,  0 ),
-				Vec3f(  0,  1,  0 ),
-				Vec3f( -1,  0,  0 ),
-				Vec3f(  0,  0,  1 ),
-			};
-			for(int i=0; i<6; i++) {
-				RayTree::AddHitCellFace(
+			Vec3f( min.x(), min.y(), max.z() ),
+			Vec3f( max.x(), min.y(), max.z() ),
+			Vec3f( max.x(), max.y(), max.z() ),
+			Vec3f( min.x(), max.y(), max.z() ),
+		};
+		Vec3f faces[6][4] = {
+			{ vertices[0], vertices[3], vertices[2], vertices[1] },
+			{ vertices[0], vertices[1], vertices[5], vertices[4] },
+			{ vertices[1], vertices[2], vertices[6], vertices[5] },
+			{ vertices[2], vertices[3], vertices[7], vertices[6] },
+			{ vertices[0], vertices[4], vertices[7], vertices[3] },
+			{ vertices[4], vertices[5], vertices[6], vertices[7] },
+		};
+		Vec3f normals[6] = {
+			Vec3f(  0,  0, -1 ),
+			Vec3f(  0, -1,  0 ),
+			Vec3f(  1,  0,  0 ),
+			Vec3f(  0,  1,  0 ),
+			Vec3f( -1,  0,  0 ),
+			Vec3f(  0,  0,  1 ),
+		};
+		for(int i=0; i<6; i++) {
+			RayTree::AddHitCellFace(
+				faces[i][0], faces[i][1], faces[i][2], faces[i][3],
+				normals[i], getMaterial(step)
+			);
+			if (info.normal == normals[i]) {
+				RayTree::AddEnteredFace(
 					faces[i][0], faces[i][1], faces[i][2], faces[i][3],
 					normals[i], getMaterial(step)
 				);
-				if(info.getNormal() == normals[i])
-					RayTree::AddEnteredFace(
-						faces[i][0], faces[i][1], faces[i][2], faces[i][3],
-						normals[i], getMaterial(step)
-					);
-			}
-
-			if(!ret && voxels[i][j][k].size() > 0) {
-				h.set(info.getNowT(), materials[voxels[i][j][k].size() - 1], info.getNormal(), r);
-				ret = true;
-//				break;
 			}
 		}
+
+		int size = (int)voxels[info.index[0]][info.index[1]][info.index[2]].size();
+		if(!ret && size > 0) {
+			h.set(info.t, materials[size - 1], info.normal, r);
+			ret = true;
+//			break;
+		}
+
 		// to next cell
 		info.nextCell();
 		RayTracingStats::IncrementNumGridCellsTraversed();
-		i = info.getIndexAt(0);
-		j = info.getIndexAt(1);
-		k = info.getIndexAt(2);
 		step ++;
 	}
 	return ret;
@@ -192,14 +173,6 @@ Bound Grid::getBoundAt(int i, int j, int k) const
 	Vec3f min = bound->getMin() + delta * Vec3f((float)i, (float)j, (float)k);
 	Vec3f max = min + delta;
 	return Bound(min, max);
-}
-
-void Grid::initGridMaterials()
-{
-	for(int i=0; i<SIZE; i++) {
-		int idx = i > 6? 6: i;
-		materials[i] = getMaterial(idx);
-	}
 }
 
 void Grid::paintVoxelAt(int i, int j, int k) const
@@ -259,19 +232,19 @@ void Grid::paintVoxelAt(int i, int j, int k) const
 	}
 }
 
+static Vec3f colors[] = {
+	WHITE,
+	MAGENTA,
+	GREEN,
+	BLUE,
+	CYAN,
+	YELLOW,
+	RED,
+};
+
 Material *Grid::getMaterial(int step) const
 {
-	Vec3f colors[] = {
-		WHITE,
-		MAGENTA,
-		GREEN,
-		BLUE,
-		CYAN,
-		YELLOW,
-		RED,
-	};
 	int size = sizeof(colors) / sizeof(colors[0]);
-
 	return new PhongMaterial(
 		colors[step % size],
 		Vec3f(0, 0, 0),
@@ -282,25 +255,3 @@ Material *Grid::getMaterial(int step) const
 	);
 }
 
-std::vector<int> Grid::toGridIndex(const Vec3f& position) const
-{
-	std::vector<int> ret(3);
-	for(unsigned int i=0; i<3; i++)
-		ret[i] = int((position[(int)i] - bound->getMin()[(int)i]) / delta[(int)i]);
-	return ret;
-}
-
-Vec3f Grid::toPosition(const std::vector<int>& index) const
-{
-	Vec3f ret;
-	for(int i=0; i<3; i++)
-		ret[i] = bound->getMin()[i] + index[(unsigned int)i] * delta[i] + delta[i] / 2;
-	return ret;
-}
-
-bool Grid::cover(std::vector<int> index) const
-{
-	return index[0] >= 0 && index[0] < nx
-		&& index[1] >= 0 && index[1] < ny
-		&& index[2] >= 0 && index[2] < nz;
-}

@@ -26,7 +26,7 @@ public:
 	virtual bool intersect(const Ray &r, Hit &h, float tmin) const = 0;
 	virtual void paint() const = 0;
 
-	virtual void insertIntoGrid(Grid *grid) const {}
+	virtual void insertIntoGrid(Grid *grid) const;
 	virtual void applyTransform(const Matrix &m, const Matrix &inv) {
 		ObjtoWorld = m * ObjtoWorld;
 		WorldtoObj = WorldtoObj * inv;

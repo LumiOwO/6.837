@@ -21,7 +21,7 @@
 
 using namespace std;
 
-static Global global;
+Global global;
 
 void render();
 void traceRayAt(float x, float y);
@@ -55,12 +55,12 @@ void render()
 	for(int i=0; i<global.width; i++)
 		for(int j=0; j<global.height; j++)
 		{
-//			cout << i << ", " << j << endl;
+			//cout << i << ", " << j << endl;
 			Vec2f origin(1.0f*i/global.width, 1.0f*j/global.height);
 			Ray ray = camera->generateRay(origin);
 
 			Hit hit;
-			Color buffer = rayTracer->traceRay(
+			Vec3f buffer = rayTracer->traceRay(
 				ray, camera->getTMin(), 0, 1,
 				RayTracer::indexOfVacuum, hit
 			);

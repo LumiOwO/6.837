@@ -5,11 +5,9 @@
 #include "hit.h"
 
 #include "grid.h"
-//#include "scene_parser.h"
 
 #include <set>
 
-typedef Vec3f Color;
 class SceneParser;
 
 class RayTracer
@@ -27,26 +25,26 @@ private:
 	bool shade_back;
 	bool visualize_grid;
 
-	Grid* grid;
+	const Grid* grid;
 public:
 	RayTracer(SceneParser *s, int max_bounces, float cutoff_weight, bool shadows, bool shade_back,
 			  Grid* grid, bool visualize_grid);
 	~RayTracer();
 
-	Vec3f traceRay(Ray &ray, float tmin, int bounces, float weight,
+	Vec3f traceRay(const Ray &ray, float tmin, int bounces, float weight,
 					 float indexOfRefraction, Hit &hit) const;
 private:
-	Vec3f traceRay(Ray &ray, float tmin, int bounces, float weight,
+	bool traceRay_test(Vec3f &color, const Ray &ray, float tmin, int bounces, float weight,
 							  float indexOfRefraction, Hit &hit,
 							  void (*RayTree_Func)(const Ray &, float, float)) const;
-	Vec3f RayCast(Ray &ray, float tmin, int bounces, float weight,
+	bool RayCast(Vec3f &color, const Ray &ray, float tmin, int bounces, float weight,
 					float indexOfRefraction, Hit &hit,
 					void (*RayTree_Func)(const Ray&, float, float)) const;
-	Vec3f RayCastFast(Ray &ray, float tmin, int bounces, float weight,
+	bool RayCastFast(Vec3f &color, const Ray &ray, float tmin, int bounces, float weight,
 							  float indexOfRefraction, Hit &hit,
 							  void (*RayTree_Func)(const Ray &, float, float)) const;
 	bool intersectVoxel(const Voxel &voxel, Ray &ray, float tmin, Hit &hit) const;
-	Vec3f getHitColor(Ray &ray, Hit &hit, int bounces, float weight, float indexOfRefraction) const;
+	Vec3f getHitColor(const Ray &ray, Hit &hit, int bounces, float weight, float indexOfRefraction) const;
 	bool traceShadowRay(Ray &ray, float dist) const;
 };
 

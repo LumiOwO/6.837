@@ -34,6 +34,9 @@ public:
   Matrix(const Matrix& m);
   Matrix(const float *m);
   ~Matrix() {}
+
+  static Matrix Identity() { return Matrix(); }
+  static Matrix Zeros() { Matrix m; m.Clear(); return m; }
   
   // ACCESSORS
   float* glGet(void) const {

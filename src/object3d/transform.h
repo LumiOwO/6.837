@@ -17,9 +17,13 @@ public:
 	virtual Bound objBound() const override { return object->objBound(); }
 	virtual Bound worldBound() const override { return object->worldBound(); }
 	virtual bool intersect(const Ray &r, Hit &h, float tmin) const override { 
-		return object->intersect(r, h, tmin); }
+		return object->intersect(r, h, tmin); 
+	}
 	virtual void paint() const override { object->paint(); }
 	virtual void insertIntoGrid(Grid *grid) const override { object->insertIntoGrid(grid); }
+	virtual void applyTransform(const Matrix &m, const Matrix &inv) override {
+		object->applyTransform(m, inv);
+	}
 };
 
 #endif // TRANSFORM_H

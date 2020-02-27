@@ -24,48 +24,6 @@
     <ClInclude Include="src\camera\perspectivecamera.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\illuminate\checkerboard.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\hit.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\light.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\marble.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\marchinginfo.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\material.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\noise.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\perlin_noise.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\phongmaterial.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\ray.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\raytracer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\raytracing_stats.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\rayTree.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\illuminate\wood.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\LA\matrix.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -108,33 +66,54 @@
     <ClInclude Include="src\scene\scene_parser.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\material\material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\material\checkerboard.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\material\wood.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\material\phongmaterial.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\material\perlin_noise.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\material\noise.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\material\marble.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ray\hit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ray\light.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ray\marchinginfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ray\ray.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ray\raytracer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ray\raytracing_stats.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ray\rayTree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\camera\orthographiccamera.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\camera\perspectivecamera.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\illuminate\checkerboard.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\illuminate\marble.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\illuminate\marchinginfo.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\illuminate\noise.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\illuminate\phongmaterial.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\illuminate\raytracer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\illuminate\wood.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\LA\vectors.cpp">
@@ -173,18 +152,6 @@
     <ClCompile Include="src\LA\matrix.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\illuminate\light.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\illuminate\perlin_noise.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\illuminate\raytracing_stats.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\illuminate\rayTree.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\object3d\bound.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -192,6 +159,39 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\scene\scene_parser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\material\checkerboard.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\material\wood.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\material\phongmaterial.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\material\perlin_noise.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\material\noise.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\material\marble.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ray\light.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ray\marchinginfo.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ray\raytracer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ray\raytracing_stats.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ray\rayTree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

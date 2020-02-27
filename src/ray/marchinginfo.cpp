@@ -1,4 +1,5 @@
 #include "marchinginfo.h"
+#include "raytracing_stats.h"
 
 void MarchingInfo::nextCell()
 {

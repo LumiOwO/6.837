@@ -2,8 +2,6 @@
 #include "glCanvas.h"
 #include <GL/glut.h>
 
-#define max(x, y) ((x) > (y)? (x): (y))
-
 #ifdef SPECULAR_FIX
 // OPTIONAL:  global variable allows (hacky) communication
 // with glCanvas::display
@@ -32,8 +30,8 @@ Vec3f PhongMaterial::Shade(const Ray &ray, const Hit &hit,
 	Vec3f v = -1 * ray.getDirection();
 	Vec3f half = (v + dirToLight).Normalize();
 
-	float coe_diffuse = max(dirToLight.Dot3(hit.getNormal()), 0);
-	float coe_specular = powf(max(half.Dot3(hit.getNormal()), 0), exponent);
+	float coe_diffuse = max2(dirToLight.Dot3(hit.getNormal()), 0);
+	float coe_specular = powf(max2(half.Dot3(hit.getNormal()), 0), exponent);
 
 	Vec3f color = getDiffuseColor() * coe_diffuse
 				  + getSpecularColor() * coe_specular;

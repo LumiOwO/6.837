@@ -67,7 +67,9 @@ bool RayTracer::RayCastFast(Vec3f &color, const Ray &ray, float tmin, int bounce
 
 	float minHitT = FLT_MAX;
 	Hit dummy;
-	while (info.hasHit && grid->inGrid(info.index)) {
+	for (; info.hasHit && grid->inGrid(info.index); info.nextCell()) {
+		RayTracingStats::IncrementNumGridCellsTraversed();
+
 		Voxel curVoxel = grid->getVoxelAt(info.index);
 		for (const Object3D* obj : curVoxel) {
 			if (objSet.find(obj) == objSet.end()) {
@@ -80,9 +82,6 @@ bool RayTracer::RayCastFast(Vec3f &color, const Ray &ray, float tmin, int bounce
 		}
 		if (minHitT < info.nextT_f())
 			break;
-		// to next cell
-		info.nextCell();
-		RayTracingStats::IncrementNumGridCellsTraversed();
 	}
 	// test planes
 	for(const Object3D* obj : grid->getExtras()) {
@@ -133,10 +132,9 @@ Vec3f RayTracer::getHitColor(const Ray &ray, Hit &hit, int bounces, float weight
 	}
 
 	// add ambient illumination
-	ret = sceneParser->getAmbientLight() * material->getDiffuseColor();
+	ret = sceneParser->getAmbientLight() * material->getDiffuseColor(hitPoint);
 	// add light illumination
-	for(int i=0; i<sceneParser->getNumLights(); i++)
-	{
+	for(int i=0; i<sceneParser->getNumLights(); i++) {
 		Light* light = sceneParser->getLight(i);
 
 		// get light info
@@ -150,20 +148,20 @@ Vec3f RayTracer::getHitColor(const Ray &ray, Hit &hit, int bounces, float weight
 		if(!blocked) {
 			ret += material->Shade(ray, hit, dirToLight, lightColor);
 		}
-
 	}
 
 	// trace ray by recursive
 	if(bounces < max_bounces && weight > cutoff_weight) {
-		PhongMaterial* phongMaterial = material->getPhongMaterial(hitPoint);
 		Vec3f normal = hit.getNormal();
 		Vec3f incoming = ray.getDirection();
-		float materialIndex = fabsf(phongMaterial->getIndexOfRefraction() - indexOfRefraction) < epsilon?
-								  indexOfVacuum: phongMaterial->getIndexOfRefraction();
+		float index = material->getIndexOfRefraction(hitPoint);
+		float materialIndex = std::abs(index - indexOfRefraction) < epsilon?
+								Material::indexOfVacuum : index;
 
 		Hit dummy;
 		// add reflection ray
-		if(phongMaterial->getReflectiveColor().Length() > 0) {
+		Vec3f reflectiveColor = material->getReflectiveColor(hitPoint);
+		if(reflectiveColor.Length() > 0) {
 			Vec3f reflection = Vec3f::mirrorDirection(normal, incoming);
 			float nowWeight = weight;
 
@@ -173,11 +171,12 @@ Vec3f RayTracer::getHitColor(const Ray &ray, Hit &hit, int bounces, float weight
 							  materialIndex, dummy, RayTree::AddReflectedSegment)) {
 				color = sceneParser->getBackgroundColor();
 			}
-			ret += phongMaterial->getReflectiveColor() * color;
+			ret += reflectiveColor * color;
 		}
 
 		// add refraction ray
-		if(phongMaterial->getTransparentColor().Length() > 0) {
+		Vec3f transparentColor = material->getTransparentColor(hitPoint);
+		if(transparentColor.Length() > 0) {
 			Vec3f refraction;
 			bool pass = Vec3f::transmittedDirection(
 				normal, incoming, indexOfRefraction,
@@ -192,7 +191,7 @@ Vec3f RayTracer::getHitColor(const Ray &ray, Hit &hit, int bounces, float weight
 								   materialIndex, dummy, RayTree::AddTransmittedSegment)) {
 					color = sceneParser->getBackgroundColor();
 				}
-				ret += phongMaterial->getTransparentColor() * color;
+				ret += transparentColor * color;
 			}
 		}
 

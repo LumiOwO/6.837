@@ -23,17 +23,15 @@ public:
 			float indexOfRefraction);
 	virtual ~PhongMaterial() {}
 
-	// getters
-	Vec3f getSpecularColor() const { return specularColor; }
-	Vec3f getReflectiveColor() const { return reflectiveColor; }
-	Vec3f getTransparentColor() const { return transparentColor; }
-	float getIndexOfRefraction() const { return indexOfRefraction; }
-
+	virtual Vec3f getReflectiveColor(Vec3f p = Vec3f()) const override { return reflectiveColor; }
+	virtual Vec3f getTransparentColor(Vec3f p = Vec3f()) const override { return transparentColor; }
+	virtual float getIndexOfRefraction(Vec3f p = Vec3f()) const override { return indexOfRefraction; }
 
 	virtual Vec3f Shade(const Ray &ray, const Hit &hit,
-						const Vec3f &dirToLight, const Vec3f &lightColor) const;
-	virtual void glSetMaterial() const;
-	virtual PhongMaterial* getPhongMaterial(Vec3f) { return this; }
+						const Vec3f &dirToLight, const Vec3f &lightColor) const override;
+	virtual void glSetMaterial() const override;
+private:
+	Vec3f getSpecularColor() const { return specularColor; }
 };
 
 #endif // PHONGMATERIAL_H

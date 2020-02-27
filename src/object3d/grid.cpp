@@ -80,7 +80,12 @@ void Grid::initializeRayMarch(MarchingInfo &mi, const Ray &r, float tmin) const
 			mi.nextT[i] = ((mi.index[i] + 1) * delta[i] - (o[i] - min[i]) ) / d[i];
 		}
 	}
+	// ensure the index is in the grid
 	if (!inGrid(mi.index))
+		mi.nextCell();
+	// if the ray origin is in the grid, then the hitpoint t is negetive
+	// so we need to traversal to the front of the origin
+	while(mi.nextT[0] < 0 || mi.nextT[1] < 0 || mi.nextT[2] < 0)
 		mi.nextCell();
 }
 

@@ -62,7 +62,7 @@ void render()
 			Hit hit;
 			Vec3f buffer = rayTracer->traceRay(
 				ray, camera->getTMin(), 0, 1,
-				RayTracer::indexOfVacuum, hit
+				Material::indexOfVacuum, hit
 			);
 
 			output.SetPixel(i, j, buffer);
@@ -81,7 +81,7 @@ void traceRayAt(float x, float y)
 	Hit hit;
 	global.rayTracer->traceRay(
 		ray, camera->getTMin(), 0, 1,
-		RayTracer::indexOfVacuum, hit
+		Material::indexOfVacuum, hit
 	);
 }
 

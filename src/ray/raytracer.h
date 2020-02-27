@@ -15,7 +15,6 @@ class RayTracer
 public:
 	constexpr static float epsilon = 1e-4f;
 	constexpr static float INF = 1e6f;
-	constexpr static float indexOfVacuum = 1.0f;
 
 private:
 	SceneParser *sceneParser;

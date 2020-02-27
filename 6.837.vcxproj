@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)\src\LA;$(ProjectDir)\src\illuminate;$(ProjectDir)\src\object3d;$(ProjectDir)\src\camera;$(ProjectDir)\src\scene;$(ProjectDir)\src\view;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\src\LA;$(ProjectDir)\src\ray;$(ProjectDir)\src\object3d;$(ProjectDir)\src\camera;$(ProjectDir)\src\scene;$(ProjectDir)\src\view;$(ProjectDir)\src\material;$(ProjectDir)\src\sample;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -125,20 +125,20 @@
     <ClInclude Include="src\camera\camera.h" />
     <ClInclude Include="src\camera\orthographiccamera.h" />
     <ClInclude Include="src\camera\perspectivecamera.h" />
-    <ClInclude Include="src\illuminate\checkerboard.h" />
-    <ClInclude Include="src\illuminate\hit.h" />
-    <ClInclude Include="src\illuminate\light.h" />
-    <ClInclude Include="src\illuminate\marble.h" />
-    <ClInclude Include="src\illuminate\marchinginfo.h" />
-    <ClInclude Include="src\illuminate\material.h" />
-    <ClInclude Include="src\illuminate\noise.h" />
-    <ClInclude Include="src\illuminate\perlin_noise.h" />
-    <ClInclude Include="src\illuminate\phongmaterial.h" />
-    <ClInclude Include="src\illuminate\ray.h" />
-    <ClInclude Include="src\illuminate\raytracer.h" />
-    <ClInclude Include="src\illuminate\raytracing_stats.h" />
-    <ClInclude Include="src\illuminate\rayTree.h" />
-    <ClInclude Include="src\illuminate\wood.h" />
+    <ClInclude Include="src\material\checkerboard.h" />
+    <ClInclude Include="src\ray\hit.h" />
+    <ClInclude Include="src\ray\light.h" />
+    <ClInclude Include="src\material\marble.h" />
+    <ClInclude Include="src\ray\marchinginfo.h" />
+    <ClInclude Include="src\material\material.h" />
+    <ClInclude Include="src\material\noise.h" />
+    <ClInclude Include="src\material\perlin_noise.h" />
+    <ClInclude Include="src\material\phongmaterial.h" />
+    <ClInclude Include="src\ray\ray.h" />
+    <ClInclude Include="src\ray\raytracer.h" />
+    <ClInclude Include="src\ray\raytracing_stats.h" />
+    <ClInclude Include="src\ray\rayTree.h" />
+    <ClInclude Include="src\material\wood.h" />
     <ClInclude Include="src\LA\matrix.h" />
     <ClInclude Include="src\LA\vectors.h" />
     <ClInclude Include="src\object3d\bound.h" />
@@ -157,17 +157,17 @@
   <ItemGroup>
     <ClCompile Include="src\camera\orthographiccamera.cpp" />
     <ClCompile Include="src\camera\perspectivecamera.cpp" />
-    <ClCompile Include="src\illuminate\checkerboard.cpp" />
-    <ClCompile Include="src\illuminate\light.cpp" />
-    <ClCompile Include="src\illuminate\marble.cpp" />
-    <ClCompile Include="src\illuminate\marchinginfo.cpp" />
-    <ClCompile Include="src\illuminate\noise.cpp" />
-    <ClCompile Include="src\illuminate\perlin_noise.cpp" />
-    <ClCompile Include="src\illuminate\phongmaterial.cpp" />
-    <ClCompile Include="src\illuminate\raytracer.cpp" />
-    <ClCompile Include="src\illuminate\raytracing_stats.cpp" />
-    <ClCompile Include="src\illuminate\rayTree.cpp" />
-    <ClCompile Include="src\illuminate\wood.cpp" />
+    <ClCompile Include="src\material\checkerboard.cpp" />
+    <ClCompile Include="src\ray\light.cpp" />
+    <ClCompile Include="src\material\marble.cpp" />
+    <ClCompile Include="src\ray\marchinginfo.cpp" />
+    <ClCompile Include="src\material\noise.cpp" />
+    <ClCompile Include="src\material\perlin_noise.cpp" />
+    <ClCompile Include="src\material\phongmaterial.cpp" />
+    <ClCompile Include="src\ray\raytracer.cpp" />
+    <ClCompile Include="src\ray\raytracing_stats.cpp" />
+    <ClCompile Include="src\ray\rayTree.cpp" />
+    <ClCompile Include="src\material\wood.cpp" />
     <ClCompile Include="src\LA\matrix.cpp" />
     <ClCompile Include="src\LA\vectors.cpp" />
     <ClCompile Include="src\main.cpp" />

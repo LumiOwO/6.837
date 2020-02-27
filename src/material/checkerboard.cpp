@@ -1,11 +1,38 @@
 #include "checkerboard.h"
-#include "phongmaterial.h"
 
 CheckerBoard::CheckerBoard(Matrix *m, Material *mat1, Material *mat2):
 	Material((mat1->getDiffuseColor() + mat2->getDiffuseColor()) / 2),
-	material1(mat1), material2(mat2)
+	material1(mat1), material2(mat2), matrix(*m)
 {
-	matrix = *m;
+
+}
+
+Vec3f CheckerBoard::getDiffuseColor(Vec3f p) const
+{
+	return odd(matrix(p))?
+		material1->getDiffuseColor(p):
+		material2->getDiffuseColor(p);
+}
+
+Vec3f CheckerBoard::getReflectiveColor(Vec3f p) const
+{
+	return odd(matrix(p)) ?
+		material1->getReflectiveColor(p) :
+		material2->getReflectiveColor(p);
+}
+
+Vec3f CheckerBoard::getTransparentColor(Vec3f p) const
+{
+	return odd(matrix(p)) ?
+		material1->getTransparentColor(p) :
+		material2->getTransparentColor(p);
+}
+
+float CheckerBoard::getIndexOfRefraction(Vec3f p) const
+{
+	return odd(matrix(p)) ?
+		material1->getIndexOfRefraction(p) :
+		material2->getIndexOfRefraction(p);
 }
 
 Vec3f CheckerBoard::Shade(const Ray &ray, const Hit &hit,
@@ -22,12 +49,6 @@ Vec3f CheckerBoard::Shade(const Ray &ray, const Hit &hit,
 void CheckerBoard::glSetMaterial() const
 {
 	material1->glSetMaterial();
-}
-
-PhongMaterial *CheckerBoard::getPhongMaterial(Vec3f hitPoint)
-{
-	hitPoint = matrix(hitPoint);
-	return odd(hitPoint)? (PhongMaterial*)material1: (PhongMaterial*)material2;
 }
 
 bool CheckerBoard::odd(const Vec3f &pos) const

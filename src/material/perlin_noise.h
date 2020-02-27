@@ -47,4 +47,6 @@ private:
   static int p[512];
 };
 
+#define noise_f(x, y, z) ((float)PerlinNoise::noise((float)(x), (float)(y), (float)(z)))
+
 #endif

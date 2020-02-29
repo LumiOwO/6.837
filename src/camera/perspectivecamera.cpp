@@ -9,7 +9,7 @@ PerspectiveCamera::PerspectiveCamera(Vec3f center, Vec3f direction, Vec3f up, fl
 	horizontal = Vec3f::Cross3(direction, up).Normalize();
 }
 
-Ray PerspectiveCamera::generateRay(Vec2f point)
+Ray PerspectiveCamera::generateRay(Vec2f point) const
 {
 	// suppose the distance is 1
 	// compute the size of the plane
@@ -34,7 +34,7 @@ Ray PerspectiveCamera::generateRay(Vec2f point)
 // crops or stretches in the x-dimension as necessary
 // ====================================================================
 
-void PerspectiveCamera::glInit(int w, int h)
+void PerspectiveCamera::glInit(int w, int h) const
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -48,7 +48,7 @@ void PerspectiveCamera::glInit(int w, int h)
 // Place a perspective camera within an OpenGL scene
 // ====================================================================
 
-void PerspectiveCamera::glPlaceCamera(void)
+void PerspectiveCamera::glPlaceCamera(void) const
 {
 	gluLookAt(
 		double(center.x()), double(center.y()), double(center.z()),

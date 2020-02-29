@@ -15,14 +15,14 @@ public:
 	PerspectiveCamera(Vec3f center, Vec3f direction, Vec3f up, float angle_radians);
 	virtual ~PerspectiveCamera() {}
 
-	virtual Ray generateRay(Vec2f point);
-	virtual float getTMin() const { return 0; }
+	virtual Ray generateRay(Vec2f point) const override;
+	virtual float getTMin() const override { return 0; }
 
-	virtual void glInit(int w, int h);
-	virtual void glPlaceCamera(void);
-	virtual void dollyCamera(float dist);
-	virtual void truckCamera(float dx, float dy);
-	virtual void rotateCamera(float rx, float ry);
+	virtual void glInit(int w, int h) const override;
+	virtual void glPlaceCamera(void) const override;
+	virtual void dollyCamera(float dist) override;
+	virtual void truckCamera(float dx, float dy) override;
+	virtual void rotateCamera(float rx, float ry) override;
 };
 
 #endif // PERSPECTIVECAMERA_H

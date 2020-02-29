@@ -7,8 +7,6 @@
 #include "matrix.h"
 #include <GL/glut.h>
 
-#include "global.h"
-
 Sphere::Sphere(Vec3f center, float radius, Material* material):
 	Object3D(material), radius(radius)
 {

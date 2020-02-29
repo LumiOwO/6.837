@@ -13,6 +13,10 @@ unsigned long long RayTracingStats::num_nonshadow_rays;
 unsigned long long RayTracingStats::num_shadow_rays;
 unsigned long long RayTracingStats::num_intersections;
 unsigned long long RayTracingStats::num_grid_cells_traversed;
+std::mutex RayTracingStats::mutex_nonshadow_rays;
+std::mutex RayTracingStats::mutex_shadow_rays;
+std::mutex RayTracingStats::mutex_intersections;
+std::mutex RayTracingStats::mutex_grid_cells_traversed;
 
 // ====================================================================
 // ====================================================================

@@ -35,14 +35,13 @@ public:
 private:
 	bool traceRay_test(Vec3f &color, const Ray &ray, float tmin, int bounces, float weight,
 							  float indexOfRefraction, Hit &hit,
-							  void (*RayTree_Func)(const Ray &, float, float)) const;
+							  void (*RayTree_Func)(const Ray &, float, float), bool isShadowRay) const;
 	bool RayCast(Vec3f &color, const Ray &ray, float tmin, int bounces, float weight,
 					float indexOfRefraction, Hit &hit,
-					void (*RayTree_Func)(const Ray&, float, float)) const;
+					void (*RayTree_Func)(const Ray&, float, float), bool isShadowRay) const;
 	bool RayCastFast(Vec3f &color, const Ray &ray, float tmin, int bounces, float weight,
 							  float indexOfRefraction, Hit &hit,
-							  void (*RayTree_Func)(const Ray &, float, float)) const;
-	bool intersectVoxel(const Voxel &voxel, Ray &ray, float tmin, Hit &hit) const;
+							  void (*RayTree_Func)(const Ray &, float, float), bool isShadowRay) const;
 	Vec3f getHitColor(const Ray &ray, Hit &hit, int bounces, float weight, float indexOfRefraction) const;
 	bool traceShadowRay(Ray &ray, float dist) const;
 };

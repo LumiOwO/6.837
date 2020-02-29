@@ -3,9 +3,11 @@
 
 #include <time.h>
 #include <limits.h>
+#include <mutex>
 
 #include "vectors.h"
 #include "bound.h"
+#include "global.h"
 
 // ====================================================================
 // ====================================================================
@@ -23,10 +25,20 @@ public:
 			 int nx, int ny, int nz);
 
   // Call for each non-shadow ray
-  static void IncrementNumNonShadowRays() { num_nonshadow_rays++; }
+  static void IncrementNumNonShadowRays() { 
+	  if (!global.stats) return;
+	  mutex_nonshadow_rays.lock();
+	  num_nonshadow_rays++; 
+	  mutex_nonshadow_rays.unlock();
+  }
 
   // Call for each shadow ray
-  static void IncrementNumShadowRays() { num_shadow_rays++; }
+  static void IncrementNumShadowRays() { 
+	  if (!global.stats) return;
+	  mutex_shadow_rays.lock();
+	  num_shadow_rays++; 
+	  mutex_shadow_rays.unlock();
+  }
 
   // Add this to each Object3D primitive's intersect routine 
   // (but not group and transform). 
@@ -34,10 +46,19 @@ public:
   // is computed, not the number of times it returns true
   static void IncrementNumIntersections() {    
     // WARNING:  this might overflow
-    num_intersections++; }
+	  if (!global.stats) return;
+	  mutex_intersections.lock();
+	  num_intersections++;
+	  mutex_intersections.unlock();
+  }
 
   // Call each time a new cell is entered by a ray
-  static void IncrementNumGridCellsTraversed() { num_grid_cells_traversed++; }
+  static void IncrementNumGridCellsTraversed() {
+	  if (!global.stats) return;
+	  mutex_grid_cells_traversed.lock();
+	  num_grid_cells_traversed++; 
+	  mutex_grid_cells_traversed.unlock();
+  }
 
   // Call when you're all done
   static void PrintStatistics();
@@ -54,10 +75,15 @@ private:
   static int num_y;
   static int num_z;
   static unsigned long long start_time;
+
   static unsigned long long num_nonshadow_rays;
   static unsigned long long num_shadow_rays;
   static unsigned long long num_intersections;
-  static unsigned long long num_grid_cells_traversed;  
+  static unsigned long long num_grid_cells_traversed; 
+  static std::mutex mutex_nonshadow_rays;
+  static std::mutex mutex_shadow_rays;
+  static std::mutex mutex_intersections;
+  static std::mutex mutex_grid_cells_traversed;
 };
 
 // ====================================================================

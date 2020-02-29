@@ -29,42 +29,41 @@ RayTracer::~RayTracer()
 
 }
 
-static std::set<const Object3D*> objSet;
-static bool isTracingShadow;
-
 Vec3f RayTracer::traceRay(const Ray &ray, float tmin, int bounces, float weight,
 						  float indexOfRefraction, Hit &hit) const
 {
-	isTracingShadow = false;
-
 	Vec3f ret;
-	if(!traceRay_test(ret, ray, tmin, bounces, weight, indexOfRefraction, hit, RayTree::SetMainSegment))
+	if(!traceRay_test(ret, ray, tmin, bounces, weight, 
+		indexOfRefraction, hit, RayTree::SetMainSegment, false))
 		ret = sceneParser->getBackgroundColor();
 	return ret;
 }
 
 bool RayTracer::traceRay_test(Vec3f &color, const Ray &ray, float tmin, int bounces, 
 							  float weight, float indexOfRefraction, Hit &hit,
-							  void (*RayTree_Func)(const Ray &, float, float)) const
+							  void (*RayTree_Func)(const Ray &, float, float), bool isShadowRay) const
 {
-	objSet.clear();
 	bool ret;
-	if(grid && !visualize_grid)
-		ret = RayCastFast(color, ray, tmin, bounces, weight, indexOfRefraction, hit, RayTree_Func);
-	else
-		ret = RayCast(color, ray, tmin, bounces, weight, indexOfRefraction, hit, RayTree_Func);
+	if (grid && !visualize_grid) {
+		ret = RayCastFast(color, ray, tmin, bounces, weight, 
+			indexOfRefraction, hit, RayTree_Func, isShadowRay);
+	} else {
+		ret = RayCast(color, ray, tmin, bounces, weight, 
+			indexOfRefraction, hit, RayTree_Func, isShadowRay);
+	}
 	return ret;
 }
 
 bool RayTracer::RayCastFast(Vec3f &color, const Ray &ray, float tmin, int bounces, 
 							float weight, float indexOfRefraction, Hit &hit,
-							void (*RayTree_Func)(const Ray &, float, float)) const
+							void (*RayTree_Func)(const Ray &, float, float), bool isShadowRay) const
 {
 	RayTracingStats::IncrementNumNonShadowRays();
 
 	MarchingInfo info;
 	grid->initializeRayMarch(info, ray, tmin);
 
+	std::set<const Object3D*> objSet;
 	float minHitT = FLT_MAX;
 	Hit dummy;
 	for (; info.hasHit && grid->inGrid(info.index); info.nextCell()) {
@@ -96,14 +95,16 @@ bool RayTracer::RayCastFast(Vec3f &color, const Ray &ray, float tmin, int bounce
 		return false;
 	} else {
 		RayTree_Func(ray, tmin, hit.getT());
-		color = weight * getHitColor(ray, hit, bounces, weight, indexOfRefraction);
+		if (!isShadowRay) {
+			color = weight * getHitColor(ray, hit, bounces, weight, indexOfRefraction);
+		}
 		return true;
 	}
 }
 
 bool RayTracer::RayCast(Vec3f &color, const Ray &ray, float tmin, int bounces, 
 						float weight, float indexOfRefraction, Hit &hit,
-						void (*RayTree_Func)(const Ray &, float, float)) const
+						void (*RayTree_Func)(const Ray &, float, float), bool isShadowRay) const
 {
 	RayTracingStats::IncrementNumNonShadowRays();
 
@@ -116,7 +117,9 @@ bool RayTracer::RayCast(Vec3f &color, const Ray &ray, float tmin, int bounces,
 		return false;
 	} else {
 		RayTree_Func(ray, tmin, hit.getT());
-		color = weight * getHitColor(ray, hit, bounces, weight, indexOfRefraction);
+		if (!isShadowRay) {
+			color = weight * getHitColor(ray, hit, bounces, weight, indexOfRefraction);
+		}
 		return true;
 	}
 }
@@ -168,7 +171,7 @@ Vec3f RayTracer::getHitColor(const Ray &ray, Hit &hit, int bounces, float weight
 			Ray reflection_ray(hitPoint, reflection);
 			Vec3f color;
 			if(!traceRay_test(color, reflection_ray, epsilon, bounces + 1, nowWeight,
-							  materialIndex, dummy, RayTree::AddReflectedSegment)) {
+							  materialIndex, dummy, RayTree::AddReflectedSegment, false)) {
 				color = sceneParser->getBackgroundColor();
 			}
 			ret += reflectiveColor * color;
@@ -188,7 +191,7 @@ Vec3f RayTracer::getHitColor(const Ray &ray, Hit &hit, int bounces, float weight
 			if(pass) {
 				Vec3f color;
 				if (!traceRay_test(color, refraction_ray, epsilon, bounces + 1, nowWeight,
-								   materialIndex, dummy, RayTree::AddTransmittedSegment)) {
+								   materialIndex, dummy, RayTree::AddTransmittedSegment, false)) {
 					color = sceneParser->getBackgroundColor();
 				}
 				ret += transparentColor * color;
@@ -203,14 +206,11 @@ bool RayTracer::traceShadowRay(Ray &ray, float dist) const
 {
 	bool ret = false;
 	Hit hit;
-	if(shadows && !isTracingShadow) {
+	if(shadows) {
 		RayTracingStats::IncrementNumShadowRays();
-
-		isTracingShadow = true;
 		Vec3f color;
 		bool blocked = traceRay_test(color, ray, epsilon, max_bounces, 
-				cutoff_weight, 0, hit, RayTree::AddShadowSegment);
-		isTracingShadow = false;
+				cutoff_weight, 0, hit, RayTree::AddShadowSegment, true);
 
 		ret = blocked && (hit.getT() < dist);
 	}

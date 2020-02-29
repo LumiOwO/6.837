@@ -12,8 +12,8 @@ public:
 
 	virtual float getWeight(float x, float y) const {
 		float k = -1.0f / radius;
-		float d = sqrt(x * x + y * y);
-		return max2(1.0f + k * d, 0);
+		float d_square = x * x + y * y;
+		return d_square < radius * radius? (1.0f + k * sqrt(d_square)): 0;
 	}
 	virtual int getSupportRadius() const override { return int(radius + 0.5f - 1e-5f); }
 };

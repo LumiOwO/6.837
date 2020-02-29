@@ -2,17 +2,14 @@
 #include "matrix.h"
 #include <GL/glut.h>
 
-OrthographicCamera::OrthographicCamera(Vec3f center, Vec3f direction, Vec3f up, float size)
+OrthographicCamera::OrthographicCamera(Vec3f center, Vec3f direction, Vec3f up, float size):
+	center(center), direction(direction.Normalize()),
+	up(up.Normalize()), size(size)
 {
-	this->center = center;
-	this->direction = direction.Normalize();
-	this->up = up.Normalize();
-	this->size = size;
-
-	this->horizontal = Vec3f::Cross3(direction, up).Normalize();
+	horizontal = Vec3f::Cross3(direction, up).Normalize();
 }
 
-Ray OrthographicCamera::generateRay(Vec2f point)
+Ray OrthographicCamera::generateRay(Vec2f point) const
 {
 	float x, y;
 	point.Get(x, y);
@@ -29,7 +26,7 @@ Ray OrthographicCamera::generateRay(Vec2f point)
 // crops the screen in the narrowest dimension.
 // ====================================================================
 
-void OrthographicCamera::glInit(int w, int h)
+void OrthographicCamera::glInit(int w, int h) const
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -51,7 +48,7 @@ void OrthographicCamera::glInit(int w, int h)
 // Place an orthographic camera within an OpenGL scene
 // ====================================================================
 
-void OrthographicCamera::glPlaceCamera(void)
+void OrthographicCamera::glPlaceCamera(void) const
 {
 	gluLookAt(
 		double(center.x()), double(center.y()), double(center.z()),

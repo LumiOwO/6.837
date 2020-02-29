@@ -108,6 +108,36 @@
     <ClInclude Include="src\ray\rayTree.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\sample\film.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sample\sample.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sample\sampler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sample\filter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sample\RandomSampler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sample\UniformSampler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sample\BoxFilter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sample\JitteredSampler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sample\TentFilter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sample\GaussianFilter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\camera\orthographiccamera.cpp">
@@ -192,6 +222,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\ray\rayTree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sample\film.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sample\filter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

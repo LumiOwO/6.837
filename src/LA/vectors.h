@@ -15,6 +15,8 @@ using namespace std;
 
 #define min2(a,b) (((a)<(b))?(a):(b))
 #define max2(a,b) (((a)>(b))?(a):(b))
+#define rand_f() ((float)(rand() / (double)RAND_MAX))
+#define rand_f_range(a, b) ((a) + rand_f() * ((b) - (a)) )
 
 const float MachineEpsilon = std::numeric_limits<float>::epsilon() * 0.5f;
 #define gamma(n) ((n) * MachineEpsilon) / (1 - (n) * MachineEpsilon)
@@ -48,6 +50,10 @@ public:
   float operator[](int i) const { 
     assert (i >= 0 && i < 2); 
     return data[i]; }
+  float& operator[](int i) {
+	  assert(i >= 0 && i < 3);
+	  return data[i];
+  }
   float x() const { return data[0]; }
   float y() const { return data[1]; }
   float Length() const {
@@ -96,6 +102,22 @@ public:
     data[1] /= f;
     return *this; }
   Vec2f operator-() const { return Vec2f(-data[0], -data[1]); }
+
+  friend Vec2f operator+(const Vec2f &v1, const Vec2f &v2) {
+	  Vec2f v3; Add(v3, v1, v2); return v3;
+  }
+  friend Vec2f operator-(const Vec2f &v1, const Vec2f &v2) {
+	  Vec2f v3; Sub(v3, v1, v2); return v3;
+  }
+  friend Vec2f operator*(const Vec2f &v1, const Vec2f &v2) {
+	  Vec2f v3; Mult(v3, v1, v2); return v3;
+  }
+  friend Vec2f operator*(const Vec2f &v1, float f) {
+	  Vec2f v2; CopyScale(v2, v1, f); return v2;
+  }
+  friend Vec2f operator*(float f, const Vec2f &v1) {
+	  Vec2f v2; CopyScale(v2, v1, f); return v2;
+  }
   
   // OPERATIONS
   float Dot2(const Vec2f &V) const {
@@ -120,6 +142,10 @@ public:
   static void WeightedSum(Vec2f &a, const Vec2f &b, float c, const Vec2f &d, float e ) {
     a.data[0] = b.data[0] * c + d.data[0] * e;
     a.data[1] = b.data[1] * c + d.data[1] * e; }
+  static void Mult(Vec2f &a, const Vec2f &b, const Vec2f &c) {
+	  a.data[0] = b.data[0] * c.data[0];
+	  a.data[1] = b.data[1] * c.data[1];
+  }
 
   // INPUT / OUTPUT
   void Write(FILE *F = stdout) const {
@@ -163,6 +189,10 @@ public:
   float operator[](int i) const { 
     assert (i >= 0 && i < 3); 
     return data[i]; }
+  float& operator[](int i) {
+	  assert(i >= 0 && i < 3);
+	  return data[i];
+  }
   float& x() { return data[0]; }
   float& y() { return data[1]; }
   float& z() { return data[2]; }
@@ -223,10 +253,6 @@ public:
     if (data[0] < low) data[0] = low;  if (data[0] > high) data[0] = high;
     if (data[1] < low) data[1] = low;  if (data[1] > high) data[1] = high;
     if (data[2] < low) data[2] = low;  if (data[2] > high) data[2] = high; }
-
-  float& operator[](int i) {
-	assert (i >= 0 && i < 3);
-	return data[i]; }
 
   // OVERLOADED OPERATORS
   Vec3f& operator=(const Vec3f &V) {

@@ -72,6 +72,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(ProjectDir)\src\LA;$(ProjectDir)\src\ray;$(ProjectDir)\src\object3d;$(ProjectDir)\src\camera;$(ProjectDir)\src\scene;$(ProjectDir)\src\view;$(ProjectDir)\src\material;$(ProjectDir)\src\sample;$(IncludePath)</IncludePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -91,7 +94,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src\camera;$(ProjectDir)\src\LA;$(ProjectDir)\src\material;$(ProjectDir)\src\object3d;$(ProjectDir)\src\ray;$(ProjectDir)\src\sample;$(ProjectDir)\src\scene;$(ProjectDir)\src\view</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeglutd.lib;opencv_world412d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -122,6 +132,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\sample\BoxFilter.h" />
+    <ClInclude Include="src\sample\GaussianFilter.h" />
+    <ClInclude Include="src\sample\JitteredSampler.h" />
+    <ClInclude Include="src\sample\RandomSampler.h" />
     <ClInclude Include="src\camera\camera.h" />
     <ClInclude Include="src\camera\orthographiccamera.h" />
     <ClInclude Include="src\camera\perspectivecamera.h" />
@@ -149,6 +163,12 @@
     <ClInclude Include="src\object3d\sphere.h" />
     <ClInclude Include="src\object3d\transform.h" />
     <ClInclude Include="src\object3d\triangle.h" />
+    <ClInclude Include="src\sample\film.h" />
+    <ClInclude Include="src\sample\filter.h" />
+    <ClInclude Include="src\sample\sample.h" />
+    <ClInclude Include="src\sample\sampler.h" />
+    <ClInclude Include="src\sample\TentFilter.h" />
+    <ClInclude Include="src\sample\UniformSampler.h" />
     <ClInclude Include="src\scene\global.h" />
     <ClInclude Include="src\scene\scene_parser.h" />
     <ClInclude Include="src\view\glCanvas.h" />
@@ -179,6 +199,8 @@
     <ClCompile Include="src\object3d\sphere.cpp" />
     <ClCompile Include="src\object3d\transform.cpp" />
     <ClCompile Include="src\object3d\triangle.cpp" />
+    <ClCompile Include="src\sample\film.cpp" />
+    <ClCompile Include="src\sample\filter.cpp" />
     <ClCompile Include="src\scene\global.cpp" />
     <ClCompile Include="src\scene\scene_parser.cpp" />
     <ClCompile Include="src\view\glCanvas.cpp" />

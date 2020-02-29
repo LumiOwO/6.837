@@ -5,6 +5,8 @@ class SceneParser;
 class RayTracer;
 class Grid;
 class Bound;
+class Sampler;
+class Filter;
 
 struct Global
 {
@@ -26,10 +28,17 @@ struct Global
 	bool visualize_grid;
 	bool stats;
 
+	char *sample_file;
+	int sample_zoom;
+	char *filter_file;
+	int filter_zoom;
+
 	SceneParser* sceneParser;
 	RayTracer* rayTracer;
 	Grid* grid;
 	Bound* bound;
+	Sampler *sampler;
+	Filter *filter;
 
 	Global();
 	~Global();

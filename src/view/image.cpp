@@ -10,13 +10,13 @@
 
 unsigned char ReadByte(FILE *file) {  
   unsigned char b;
-  int success = fread((void*)&b,sizeof(unsigned char),1,file);
+  size_t success = fread((void*)&b,sizeof(unsigned char),1,file);
   assert (success == 1);
   return b;
 }
 
 void WriteByte(FILE *file, unsigned char b) {
-  int success = fwrite((void*)&b,sizeof(unsigned char),1,file);
+  size_t success = fwrite((void*)&b,sizeof(unsigned char),1,file);
   assert (success == 1);
 }
 

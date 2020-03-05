@@ -20,10 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{BD9F8E6D-90DA-4296-A170-3314BCC4F804}</ProjectGuid>
-    <RootNamespace>My6837</RootNamespace>
+    <ProjectGuid>{F3D417D4-6A7D-4889-8BBA-AFD94ED4FD4A}</ProjectGuid>
+    <RootNamespace>curveeditor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <ProjectName>raytracer</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -71,10 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\src\LA;$(SolutionDir)\src\ray;$(SolutionDir)\src\object3d;$(SolutionDir)\src\camera;$(SolutionDir)\src\parser;$(SolutionDir)\src\view;$(SolutionDir)\src\material;$(SolutionDir)\src\sample;$(IncludePath)</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\src\LA;$(SolutionDir)\src\ray;$(SolutionDir)\src\object3d;$(SolutionDir)\src\camera;$(SolutionDir)\src\parser;$(SolutionDir)\src\view;$(SolutionDir)\src\material;$(SolutionDir)\src\sample;$(SolutionDir)\src\object3d\spline;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -82,7 +78,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>freeglut_staticd.lib;freeglutd.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -95,14 +91,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\src\camera;$(ProjectDir)\src\LA;$(ProjectDir)\src\material;$(ProjectDir)\src\object3d;$(ProjectDir)\src\ray;$(ProjectDir)\src\sample;$(ProjectDir)\src\scene;$(ProjectDir)\src\view</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <Link>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
-      <AdditionalDependencies>freeglutd.lib;opencv_world412d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -133,79 +122,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\sample\BoxFilter.h" />
-    <ClInclude Include="src\sample\GaussianFilter.h" />
-    <ClInclude Include="src\sample\JitteredSampler.h" />
-    <ClInclude Include="src\sample\RandomSampler.h" />
-    <ClInclude Include="src\camera\camera.h" />
-    <ClInclude Include="src\camera\orthographiccamera.h" />
-    <ClInclude Include="src\camera\perspectivecamera.h" />
-    <ClInclude Include="src\material\checkerboard.h" />
-    <ClInclude Include="src\ray\hit.h" />
-    <ClInclude Include="src\ray\light.h" />
-    <ClInclude Include="src\material\marble.h" />
-    <ClInclude Include="src\ray\marchinginfo.h" />
-    <ClInclude Include="src\material\material.h" />
-    <ClInclude Include="src\material\noise.h" />
-    <ClInclude Include="src\material\perlin_noise.h" />
-    <ClInclude Include="src\material\phongmaterial.h" />
-    <ClInclude Include="src\ray\ray.h" />
-    <ClInclude Include="src\ray\raytracer.h" />
-    <ClInclude Include="src\ray\raytracing_stats.h" />
-    <ClInclude Include="src\ray\rayTree.h" />
-    <ClInclude Include="src\material\wood.h" />
-    <ClInclude Include="src\LA\matrix.h" />
-    <ClInclude Include="src\LA\vectors.h" />
-    <ClInclude Include="src\object3d\bound.h" />
-    <ClInclude Include="src\object3d\grid.h" />
-    <ClInclude Include="src\object3d\group.h" />
-    <ClInclude Include="src\object3d\object3d.h" />
-    <ClInclude Include="src\object3d\plane.h" />
-    <ClInclude Include="src\object3d\sphere.h" />
-    <ClInclude Include="src\object3d\transform.h" />
-    <ClInclude Include="src\object3d\triangle.h" />
-    <ClInclude Include="src\sample\film.h" />
-    <ClInclude Include="src\sample\filter.h" />
-    <ClInclude Include="src\sample\sample.h" />
-    <ClInclude Include="src\sample\sampler.h" />
-    <ClInclude Include="src\sample\TentFilter.h" />
-    <ClInclude Include="src\sample\UniformSampler.h" />
-    <ClInclude Include="src\parser\global.h" />
-    <ClInclude Include="src\parser\scene_parser.h" />
-    <ClInclude Include="src\view\glCanvas.h" />
-    <ClInclude Include="src\view\image.h" />
+    <ClInclude Include="..\src\LA\matrix.h" />
+    <ClInclude Include="..\src\LA\vectors.h" />
+    <ClInclude Include="..\src\object3d\spline\BezierCurve.h" />
+    <ClInclude Include="..\src\object3d\spline\BezierPatch.h" />
+    <ClInclude Include="..\src\object3d\spline\BSplineCurve.h" />
+    <ClInclude Include="..\src\object3d\spline\curve.h" />
+    <ClInclude Include="..\src\object3d\spline\spline.h" />
+    <ClInclude Include="..\src\object3d\spline\surface.h" />
+    <ClInclude Include="..\src\object3d\spline\SurfaceOfRevolution.h" />
+    <ClInclude Include="..\src\object3d\spline\triangle_mesh.h" />
+    <ClInclude Include="..\src\parser\ce_arg_parser.h" />
+    <ClInclude Include="..\src\parser\ce_spline_parser.h" />
+    <ClInclude Include="..\src\view\ce_glCanvas.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\camera\orthographiccamera.cpp" />
-    <ClCompile Include="src\camera\perspectivecamera.cpp" />
-    <ClCompile Include="src\material\checkerboard.cpp" />
-    <ClCompile Include="src\ray\light.cpp" />
-    <ClCompile Include="src\material\marble.cpp" />
-    <ClCompile Include="src\ray\marchinginfo.cpp" />
-    <ClCompile Include="src\material\noise.cpp" />
-    <ClCompile Include="src\material\perlin_noise.cpp" />
-    <ClCompile Include="src\material\phongmaterial.cpp" />
-    <ClCompile Include="src\ray\raytracer.cpp" />
-    <ClCompile Include="src\ray\raytracing_stats.cpp" />
-    <ClCompile Include="src\ray\rayTree.cpp" />
-    <ClCompile Include="src\material\wood.cpp" />
-    <ClCompile Include="src\LA\matrix.cpp" />
-    <ClCompile Include="src\LA\vectors.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\object3d\bound.cpp" />
-    <ClCompile Include="src\object3d\grid.cpp" />
-    <ClCompile Include="src\object3d\group.cpp" />
-    <ClCompile Include="src\object3d\object3d.cpp" />
-    <ClCompile Include="src\object3d\plane.cpp" />
-    <ClCompile Include="src\object3d\sphere.cpp" />
-    <ClCompile Include="src\object3d\transform.cpp" />
-    <ClCompile Include="src\object3d\triangle.cpp" />
-    <ClCompile Include="src\sample\film.cpp" />
-    <ClCompile Include="src\sample\filter.cpp" />
-    <ClCompile Include="src\parser\global.cpp" />
-    <ClCompile Include="src\parser\scene_parser.cpp" />
-    <ClCompile Include="src\view\glCanvas.cpp" />
-    <ClCompile Include="src\view\image.cpp" />
+    <ClCompile Include="..\src\ce_main.cpp" />
+    <ClCompile Include="..\src\LA\matrix.cpp" />
+    <ClCompile Include="..\src\LA\vectors.cpp" />
+    <ClCompile Include="..\src\object3d\spline\BezierCurve.cpp" />
+    <ClCompile Include="..\src\object3d\spline\BezierPatch.cpp" />
+    <ClCompile Include="..\src\object3d\spline\BSplineCurve.cpp" />
+    <ClCompile Include="..\src\object3d\spline\curve.cpp" />
+    <ClCompile Include="..\src\object3d\spline\SurfaceOfRevolution.cpp" />
+    <ClCompile Include="..\src\object3d\spline\triangle_mesh.cpp" />
+    <ClCompile Include="..\src\parser\ce_spline_parser.cpp" />
+    <ClCompile Include="..\src\view\ce_glCanvas.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -60,12 +60,6 @@
     <ClInclude Include="src\object3d\bound.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\scene\global.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scene\scene_parser.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\material\material.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -138,6 +132,12 @@
     <ClInclude Include="src\sample\GaussianFilter.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\parser\global.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\parser\scene_parser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\camera\orthographiccamera.cpp">
@@ -170,9 +170,6 @@
     <ClCompile Include="src\object3d\triangle.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\view\glCanvas.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -183,12 +180,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\object3d\bound.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scene\global.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scene\scene_parser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\material\checkerboard.cpp">
@@ -228,6 +219,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\sample\filter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser\global.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser\scene_parser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

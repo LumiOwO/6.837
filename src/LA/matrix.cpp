@@ -29,6 +29,14 @@ Matrix::Matrix(const float *m) {
   }
 }
 
+Matrix::Matrix(initializer_list<float> list) {
+	assert(list.size() == 16);
+	int n = 0;
+	for (auto it = list.begin(); it != list.end(); it++, n++) {
+		data[n / 4][n % 4] = *it;
+	}
+}
+
 // ===================================================================
 // ===================================================================
 // MODIFIERS

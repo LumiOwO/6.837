@@ -5,6 +5,7 @@
 // originally implemented by Justin Legakis
 //
 
+#include <vector>
 #include <math.h>
 #include <assert.h>
 
@@ -33,6 +34,7 @@ public:
   Matrix() { SetToIdentity(); }
   Matrix(const Matrix& m);
   Matrix(const float *m);
+  Matrix(initializer_list<float> list);
   ~Matrix() {}
 
   static Matrix Identity() { return Matrix(); }
@@ -103,6 +105,27 @@ public:
   Vec2f operator()(const Vec2f &v) const { return Transform(v); }
   Bound operator()(const Bound &b) const;
   Ray operator()(const Ray &r) const;
+  Vec4f operator*(const Vec4f &v) const { return Transform(v); }
+  
+  // type convert
+  vector<Vec4f> toVec4fs() const {
+	  vector<Vec4f> ret;
+	  for (int i = 0; i < 4; i++) {
+		  ret.push_back(Vec4f(
+			  data[0][i], data[1][i], data[2][i], data[3][i]
+		  ));
+	  }
+	  return ret;
+  }
+  vector<Vec3f> toVec3fs() const {
+	  vector<Vec3f> ret;
+	  for (int i = 0; i < 4; i++) {
+		  ret.push_back(Vec3f(
+			  data[0][i], data[1][i], data[2][i]
+		  ));
+	  }
+	  return ret;
+  }
 
   // Use to transform the direction of the ray
   // (ignores any translation)
@@ -118,6 +141,18 @@ public:
   void Write3x3(FILE *F = stdout) const;
   void Read(FILE *F);
   void Read3x3(FILE *F);
+
+  friend inline ostream &operator<<(ostream &os, const Matrix &m) {
+	  os << "Matrix: [" << endl;
+	  for (int i = 0; i < 4; i++) {
+		  for (int j = 0; j < 4; j++) {
+			  os << "\t" << m.data[i][j];
+		  }
+		  os << endl;
+	  }
+	  os << "]" << endl;
+	  return os;
+  }
   
 private:
 
@@ -125,6 +160,7 @@ private:
   float	data[4][4];
 
 };
+
 
 // ====================================================================
 // ====================================================================

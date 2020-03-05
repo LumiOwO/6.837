@@ -41,10 +41,10 @@ int main(int argc, char* argv[])
 {
 	// init
 	srand(2020);
-	glutInit(&argc, argv);
 	global.parse(argc, argv);
 
 	if (global.gui) {
+		glutInit(&argc, argv);
 		GLCanvas().initialize(global.sceneParser, render, 
 			traceRayAt, global.grid, global.visualize_grid);
 	} else {

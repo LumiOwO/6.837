@@ -332,6 +332,9 @@ public:
     return data[0] * V.data[0] +
       data[1] * V.data[1] +
       data[2] * V.data[2] ; }
+  inline friend Vec3f lerp(float t, const Vec3f &v1, const Vec3f &v2) {
+	  return (1.0f - t) * v1 + t * v2;
+  }
 
   // STATIC OPERATIONS
   static void Add(Vec3f &a, const Vec3f &b, const Vec3f &c ) {
@@ -544,6 +547,9 @@ public:
     data[3] /= f;
     return *this; }
   Vec4f operator-() const { return Vec4f(-data[0], -data[1], -data[2], -data[3]); }
+  operator Vec3f() const {
+	  return Vec3f(data[0], data[1], data[2]);
+  }
 
   // OPERATIONS
   float Dot2(const Vec4f &V) const {

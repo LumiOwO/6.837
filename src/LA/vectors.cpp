@@ -1,5 +1,4 @@
 #include "vectors.h"
-#include "raytracer.h"
 
 Vec3f Vec3f::mirrorDirection(const Vec3f &normal, const Vec3f &incoming)
 {

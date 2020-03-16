@@ -7,15 +7,6 @@
 #include "phongmaterial.h"
 #include "raytracing_stats.h"
 
-#define WHITE	Vec3f(1, 1, 1)
-#define RED		Vec3f(1, 0, 0)
-#define ORANGE	Vec3f(1, 0.5, 0)
-#define YELLOW	Vec3f(1, 1, 0)
-#define GREEN	Vec3f(0, 1, 0)
-#define CYAN	Vec3f(0, 1, 1)
-#define BLUE	Vec3f(0, 0, 1)
-#define MAGENTA	Vec3f(1, 0, 1)
-
 Grid::Grid(Bound *bb, int nx, int ny, int nz) :
 	bound(bb), nx(nx), ny(ny), nz(nz),
 	delta(bound->diagonal(nx, ny, nz))
